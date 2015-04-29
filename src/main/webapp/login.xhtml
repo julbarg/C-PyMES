@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>CPYMES - Iniciar Sesion</title>
+	<h:outputStylesheet library="css" name="style.css" />
+	<link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow'
+		rel='stylesheet' type='text/css' />
+</h:head>
+<h:body>
+	<p:ajaxStatus onstart="PF('statusDialog').show()"
+		onsuccess="PF('statusDialog').hide()" />
+	<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+		closable="false" resizable="false" showHeader="false">
+		<p:graphicImage library="image" name="loading.gif" />
+	</p:dialog>
+	<h:form id="form">
+		<p:growl />
+		<h:panelGrid columns="2" styleClass="div_main_login">
+			<p:panel styleClass="div_login_left">
+				<p:panel styleClass="logo">
+					<h:graphicImage library="image" name="logo.gif" alt="logo_claro"
+						width="180" />
+				</p:panel>
+				<p:panel styleClass="div_sublogin">
+					<hr style="height: 80px; visibility: hidden;" />
+					<p:outputLabel value="CPYMES" styleClass="titulo_app" />
+				</p:panel>
+				<p:panel styleClass="div_login_footer">
+					<p:commandLink value="¿Necesitas ayuda?" styleClass="footer_ayuda" />
+				</p:panel>
+			</p:panel>
+			<p:panel styleClass="div_login">
+				<h:panelGrid cellspacing="5" styleClass="panel_grid_login">
+					<p:inputText id="user_name" value="#{loginView.user.userName}"
+						required="true" styleClass="input_login" />
+					<p:watermark value="Nombre de usuario" for="user_name" />
+					<p:password id="password" value="#{loginView.user.password}"
+						required="true" styleClass="input_login" />
+					<p:watermark value="Contraseña" for="password" />
+					<hr style="height: 25px; visibility: hidden;" />
+					<f:facet name="footer">
+						<p:commandButton value="Iniciar Sesión"
+							action="#{loginView.authenticate}"
+							style="width: 350px; height: 40px;" update="form" />
+					</f:facet>
+				</h:panelGrid>
+			</p:panel>
+		</h:panelGrid>
+	</h:form>
+</h:body>
+</html>
