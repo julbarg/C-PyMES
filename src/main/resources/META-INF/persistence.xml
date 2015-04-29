@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="CPyMESPU" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<non-jta-data-source>NoJTACPyMES</non-jta-data-source>
+		<class>com.claro.cpymes.entity.AlarmPymesEntity</class>
+		<class>com.claro.cpymes.entity.AlarmCatalogEntity</class>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+		</properties>
+	</persistence-unit>
+	<persistence-unit name="LogsPU" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<non-jta-data-source>NoJTALogsDS</non-jta-data-source>
+		<class>com.claro.cpymes.entity.LogEntity</class>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+		</properties>
+	</persistence-unit>
+</persistence>

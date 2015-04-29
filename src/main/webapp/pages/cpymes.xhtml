@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<script type="text/javascript">
+	function start() {
+		window['progress'] = setInterval(function() {
+			var pbClient = PF('pbClient');
+			pbClient.setValue(pbClient.getValue() + (100 / 30));
+			if (pbClient.getValue() > 100) {
+				pbClient.setValue(0);
+			}
+		}, 1000);
+		document.getElementById("icon_clock").className = "play";
+	}
+
+	window.onload = start;
+
+	function cancel() {
+		clearInterval(window['progress']);
+		PF('pbClient').setValue(0);
+		document.getElementById("icon_clock").className = "pause";
+	}
+</script>
+
+<h:head>
+	<title>CPYMES</title>
+	<h:outputStylesheet library="css" name="style.css" />
+	<link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow' rel='stylesheet' type='text/css' />
+	<h:outputScript library="primefaces" name="jquery/jquery.js" />
+</h:head>
+<h:body id="body">
+	<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+	<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false"
+		resizable="false" showHeader="false">
+		<p:graphicImage library="image" name="loading.gif" />
+	</p:dialog>
+	<div id="icon_clock" class="play" />
+	<h:form id="form">
+		<p:poll listener="#{cpymes.load}" interval="#{cpymes.interval}" update="form"
+			oncomplete="PF('dataAlarm').clearFilters()" />
+		<p:growl id="growl" />
+		<p:panel styleClass="panel_transparent">
+			<p:progressBar widgetVar="pbClient" />
+			<h:panelGrid columns="6" styleClass="panel_button">
+				<p:clock pattern="HH:mm:ss" />
+				<p:commandButton value="Recargar" icon="ui-icon-arrowrefresh-1-e" style="margin-left: 5px;"
+					actionListener="#{cpymes.load}" ajax="true" update="form" immediate="true"
+					oncomplete="PF('dataAlarm').clearFilters()" />
+				<p:commandButton value="Buscar" icon="ui-icon-search" actionListener="#{cpymes.search}"
+					ajax="true" update="form" immediate="true" oncomplete="PF('dataAlarm').clearFilters()" />
+				<p:commandButton value="Reconocer" icon="ui-icon-check" actionListener="#{cpymes.reconocer}"
+					ajax="true" update="form" oncomplete="PF('dataAlarm').clearFilters()" />
+				<p:commandButton value="Reanudar" icon="ui-icon-play" actionListener="#{cpymes.play}"
+					onclick="start()" ajax="true" update="form" rendered="#{cpymes.viewPlay}" />
+				<p:commandButton value="Pausar" icon="ui-icon-pause" actionListener="#{cpymes.pause}"
+					onclick="cancel()" ajax="true" update="form" rendered="#{cpymes.viewPause}" />
+				<p:commandButton value="Limpiar" icon="ui-icon-trash" actionListener="#{cpymes.clean}"
+					ajax="true" update="form" oncomplete="PF('dataAlarm').clearFilters()" />
+			</h:panelGrid>
+		</p:panel>
+
+		<p:panel styleClass="panel_transparent panel_right">
+			<h:panelGrid columns="5" styleClass="panel_button">
+				<p:commandButton id="btn_alert" title="Alert" value="A-#{cpymes.priorityCount.alert}"
+					styleClass="#{cpymes.alertStyle}" action="#{cpymes.filterByPriority}" update="form"
+					oncomplete="PF('dataAlarm').clearFilters()">
+					<f:setPropertyActionListener target="#{cpymes.priorityAction}" value="alert" />
+				</p:commandButton>
+				<p:commandButton id="btn_crit" title="Critic" value="C-#{cpymes.priorityCount.crit}"
+					styleClass="#{cpymes.criticStyle}" action="#{cpymes.filterByPriority}" update="form"
+					oncomplete="PF('dataAlarm').clearFilters()">
+					<f:setPropertyActionListener target="#{cpymes.priorityAction}" value="crit" />
+				</p:commandButton>
+				<p:commandButton id="btn_info" title="Info" value="I-#{cpymes.priorityCount.info}"
+					styleClass="#{cpymes.infoStyle}" action="#{cpymes.filterByPriority}" update="form"
+					oncomplete="PF('dataAlarm').clearFilters()">
+					<f:setPropertyActionListener target="#{cpymes.priorityAction}" value="info" />
+				</p:commandButton>
+				<p:commandButton id="btn_notice" title="Notice" value="N-#{cpymes.priorityCount.notice}"
+					styleClass="#{cpymes.noticeStyle}" action="#{cpymes.filterByPriority}" update="form"
+					oncomplete="PF('dataAlarm').clearFilters()">
+					<f:setPropertyActionListener target="#{cpymes.priorityAction}" value="notice" />
+				</p:commandButton>
+				<p:commandButton id="btn_warning" title="Warning" value="W-#{cpymes.priorityCount.warning}"
+					styleClass="#{cpymes.warningStyle}" action="#{cpymes.filterByPriority}" update="form"
+					oncomplete="PF('dataAlarm').clearFilters()">
+					<f:setPropertyActionListener target="#{cpymes.priorityAction}" value="warning" />
+				</p:commandButton>
+
+				<p:tooltip for="btn_alert" showEvent="mouseover" hideEvent="mouseout" />
+				<p:tooltip for="btn_crit" showEvent="mouseover" hideEvent="mouseout" />
+				<p:tooltip for="btn_info" showEvent="mouseover" hideEvent="mouseout" />
+				<p:tooltip for="btn_notice" showEvent="mouseover" hideEvent="mouseout" />
+				<p:tooltip for="btn_warning" showEvent="mouseover" hideEvent="mouseout" />
+			</h:panelGrid>
+		</p:panel>
+		<br />
+		<p:panel styleClass="panel_transparent">
+			<p:dataTable id="data_alarm" var="alarm" value="#{cpymes.listAlarm}" rowKey="#{alarm.id}"
+				widgetVar="dataAlarm" rowStyleClass="#{alarm.priority}" paginatorPosition="bottom" rows="50"
+				paginator="true" selection="#{cpymes.listAlarmSelect}" filterEvent="enter"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				<p:column id="column_select" selectionMode="multiple" style="width:16px;text-align:center" />
+				<p:column headerText="Priority" filterStyle="width:70px;" filterBy="#{alarm.priority}"
+					sortBy="#{alarm.priority}" width="80" filterMatchMode="exact">
+					<f:facet name="filter">
+						<p:selectOneMenu id="select_priority" onchange="PF('dataAlarm').filter()" immediate="true">
+							<f:selectItem itemLabel="Priority" itemValue="" noSelectionOption="true" />
+							<f:selectItems value="#{cpymes.prioritys}" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText id="text_priority" value="#{alarm.priority}" styleClass="td-table-list" />
+				</p:column>
+				<p:column id="column_name" headerText="Name Device" filterMatchMode="contains"
+					filterBy="#{alarm.name}" sortBy="#{alarm.name}" width="150">
+					<h:outputText id="text_name" value="#{alarm.name}" styleClass="td-table-list" />
+				</p:column>
+				<p:column id="column_name_event" headerText="Name Event" filterBy="#{alarm.nameEvent}"
+					filterEvent="enter" sortBy="#{alarm.nameEvent}" width="200">
+					<h:outputText id="text_name_event" value="#{alarm.nameEvent}" styleClass="td-table-list" />
+				</p:column>
+				<p:column id="column_message" headerText="Description" sortBy="#{alarm.message}"
+					filterBy="#{alarm.message}" filterMatchMode="contains" filterStyle="width:350px;">
+					<h:outputText id="text_message" value="#{alarm.message}" styleClass="td-table-list"
+						escape="false" />
+				</p:column>				
+				<p:column id="column_severity" headerText="Severity" filterBy="#{alarm.severity}"
+					filterEvent="enter" sortBy="#{alarm.severity}" width="120">
+					<h:outputText id="text_severity" value="#{alarm.severity}" styleClass="td-table-list" />
+				</p:column>				
+				<p:column id="column_date" headerText="Date" sortBy="#{alarm.date}" width="120">
+					<h:outputText id="text_date" value="#{alarm.date}" styleClass="td-table-list" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</h:form>
+</h:body>
+</html>
