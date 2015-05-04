@@ -121,7 +121,7 @@ public class CPYMESView {
       listPrioritySelect = new ArrayList<String>();
       prioritys = new ArrayList<String>();
       prioritys.add(PriorityEnum.ALERT.getValue());
-      prioritys.add(PriorityEnum.CRITIC.getValue());
+      prioritys.add(PriorityEnum.CRITICAL.getValue());
       prioritys.add(PriorityEnum.INFO.getValue());
       prioritys.add(PriorityEnum.NOTICE.getValue());
       prioritys.add(PriorityEnum.WARNING.getValue());
@@ -193,7 +193,7 @@ public class CPYMESView {
    private void changeStyle(String priority) {
       if (priority.equals(PriorityEnum.ALERT.getValue())) {
          alertStyle = alertStyle.equals(BUTTON_PRIORITY) ? BUTTON_PRIORITY_ACTIVE : BUTTON_PRIORITY;
-      } else if (priority.equals(PriorityEnum.CRITIC.getValue())) {
+      } else if (priority.equals(PriorityEnum.CRITICAL.getValue())) {
          criticStyle = criticStyle.equals(BUTTON_PRIORITY) ? BUTTON_PRIORITY_ACTIVE : BUTTON_PRIORITY;
       } else if (priority.equals(PriorityEnum.INFO.getValue())) {
          infoStyle = infoStyle.equals(BUTTON_PRIORITY) ? BUTTON_PRIORITY_ACTIVE : BUTTON_PRIORITY;

@@ -26,14 +26,15 @@ public class LogUtil {
 
       LogDTO logDTO = mapearLogDTO(token, mensaje);
       logDTO.setSeq(logEntity.getSeq());
-      logDTO.setPriority(logEntity.getPriority());
+
+      String priority = logEntity.getPriority();
+      if (PriorityEnum.CRITIC.getValue().equals(priority)) {
+         priority = PriorityEnum.CRITICAL.getValue();
+      }
+      logDTO.setPriority(priority);
       if (logDTO.getKey() != null) {
-         String priority = logEntity.getPriority();
-         if (PriorityEnum.CRITIC.getValue().equals(priority))
-            priority = PriorityEnum.CRITICAL.getValue();
          logDTO.getKey().setCriticality(priority);
       }
-
       return logDTO;
 
    }

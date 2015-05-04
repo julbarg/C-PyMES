@@ -106,7 +106,7 @@ public class CPYMESEJB implements CPYMESEJBRemote {
             count = priorityCountDTO.getAlert() + 1;
             priorityCountDTO.setAlert(count);
 
-         } else if (priority.equals(PriorityEnum.CRITIC.getValue())) {
+         } else if (priority.equals(PriorityEnum.CRITICAL.getValue())) {
             count = priorityCountDTO.getCrit() + 1;
             priorityCountDTO.setCrit(count);
 
@@ -148,6 +148,7 @@ public class CPYMESEJB implements CPYMESEJBRemote {
          alarmDTO.setDate(alarmEntity.getDate());
          alarmDTO.setNameCorrelation(alarmEntity.getNameCorrelation());
          alarmDTO.setNodo(alarmEntity.getNodo());
+         alarmDTO.setSeverity(alarmEntity.getSeverity());
 
          if (alarmEntity.getNameCorrelation() == null) {
             alarmDTO.setName(alarmEntity.getName());

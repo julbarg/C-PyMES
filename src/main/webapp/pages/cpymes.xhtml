@@ -69,7 +69,7 @@
 				<p:commandButton id="btn_crit" title="Critic" value="C-#{cpymes.priorityCount.crit}"
 					styleClass="#{cpymes.criticStyle}" action="#{cpymes.filterByPriority}" update="form"
 					oncomplete="PF('dataAlarm').clearFilters()">
-					<f:setPropertyActionListener target="#{cpymes.priorityAction}" value="crit" />
+					<f:setPropertyActionListener target="#{cpymes.priorityAction}" value="critic" />
 				</p:commandButton>
 				<p:commandButton id="btn_info" title="Info" value="I-#{cpymes.priorityCount.info}"
 					styleClass="#{cpymes.infoStyle}" action="#{cpymes.filterByPriority}" update="form"
