@@ -13,4 +13,3 @@ CREATE TABLE cpymes.alarm_pymes (
   
 ALTER TABLE cpymes.alarm_pymes 
 CHANGE COLUMN id_alarm_pymes id_alarm_pymes BIGINT(20) NOT NULL AUTO_INCREMENT ;
-
