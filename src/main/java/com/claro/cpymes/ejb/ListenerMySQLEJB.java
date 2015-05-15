@@ -18,7 +18,7 @@ import com.claro.cpymes.listener.Connection;
 import com.claro.cpymes.listener.SNMPTTBinaryLogClient;
 import com.claro.cpymes.listener.SQLOperator;
 import com.claro.cpymes.util.Constant;
-import com.claro.cpymes.util.LogUtil;
+import com.claro.cpymes.util.Util;
 import com.github.shyiko.mysql.binlog.BinaryLogClient.EventListener;
 import com.github.shyiko.mysql.binlog.event.Event;
 import com.github.shyiko.mysql.binlog.event.EventType;
@@ -64,9 +64,9 @@ public class ListenerMySQLEJB implements ListenerMySQLEJBRemote {
             // Este metodo se ejecuta cada vez que se dispara un envento en BD
             @Override
             public void onEvent(Event event) {
-               if (LogUtil.evaluarEvento(EventType.QUERY, event)) {
+               if (Util.evaluarEvento(EventType.QUERY, event)) {
                   String sql = ((QueryEventData) event.getData()).getSql().toUpperCase();
-                  if (LogUtil.evaluarOperacion(sql, operacionesAEscuchar)) {
+                  if (Util.evaluarOperacion(sql, operacionesAEscuchar)) {
                      LOGGER.info("Event: " + event);
                      procesarDB();
                   }

@@ -35,6 +35,10 @@ public class KeyCatalogDTO implements Serializable {
       this.criticality = criticality;
    }
 
+   public KeyCatalogDTO() {
+
+   }
+
    @Override
    public String toString() {
       String msg = OID + " - " + criticality;
@@ -58,5 +62,9 @@ public class KeyCatalogDTO implements Serializable {
    @Override
    public int hashCode() {
       return (OID + criticality).hashCode();
+   }
+
+   public boolean isEmpty() {
+      return this.OID == null || this.criticality == null;
    }
 }

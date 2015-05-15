@@ -1,41 +1,51 @@
-package com.claro.cpymes.util;
+package com.claro.cpymes.ejb;
 
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.claro.cpymes.dto.KeyCatalogDTO;
 import com.claro.cpymes.dto.LogDTO;
+import com.claro.cpymes.ejb.remote.LogUtilEJBRemote;
 import com.claro.cpymes.entity.LogEntity;
 import com.claro.cpymes.enums.PriorityEnum;
-import com.github.shyiko.mysql.binlog.event.Event;
-import com.github.shyiko.mysql.binlog.event.EventType;
+import com.claro.cpymes.util.Constant;
+import com.claro.cpymes.util.FormatLogException;
 
 
-public class LogUtil {
+@Stateless
+@LocalBean
+public class LogUtilEJB implements LogUtilEJBRemote {
 
-   private static Logger LOGGER = LogManager.getLogger(LogUtil.class.getName());
+   private static Logger LOGGER = LogManager.getLogger(LogUtilEJB.class.getName());
 
-   public static LogDTO mapearLogEntity(LogEntity logEntity) {
-      String mensaje = logEntity.getMsg();
-      StringTokenizer token = new StringTokenizer(mensaje, Constant.DELIMETER_SNMPTT);
+   private StringTokenizer tokenMain;
 
-      LogDTO logDTO = mapearLogDTO(token, mensaje);
-      logDTO.setSeq(logEntity.getSeq());
+   private StringTokenizer tokenCodeServiceIp;
 
-      String priority = logEntity.getPriority();
-      if (PriorityEnum.CRITIC.getValue().equals(priority)) {
-         priority = PriorityEnum.CRITICAL.getValue();
+   @Override
+   public LogDTO mapearLog(LogEntity logEntity) {
+      LogDTO logDTO = new LogDTO();
+      try {
+         getMessage(logEntity);
+         mapearLogDTO(logDTO);
+         adicionarInformacionLogDTO(logEntity, logDTO);
+      } catch (FormatLogException e) {
+
       }
-      logDTO.setPriority(priority);
-      if (logDTO.getKey() != null) {
-         logDTO.getKey().setCriticality(priority);
-      }
+
       return logDTO;
+   }
+
+   private void getMessage(LogEntity logEntity) {
+      String mensaje = logEntity.getMsg();
+      tokenMain = new StringTokenizer(mensaje, Constant.DELIMETER_SNMPTT);
 
    }
 
@@ -49,54 +59,53 @@ public class LogUtil {
    /**
     * Metodo encargado de mapear la informacion de los logs
     * Obtiene la IP, NameDevice, NameEvent, OID, Nodo
+    * @param logDTO 
     * @param token
     * @return LogDTO mapeado
+    * @throws FormatLogException 
     */
-   private static LogDTO mapearLogDTO(StringTokenizer token, String mensaje) {
-      int count = token.countTokens();
-
-      if (count < 6) {
-         LOGGER.error("TranslatedLine no cumple el formato");
-         LOGGER.error("MESSAGE: " + mensaje);
-         return new LogDTO();
+   private void mapearLogDTO(LogDTO logDTO) throws FormatLogException {
+      if (tokenMain.countTokens() < 6) {
+         throw new FormatLogException("Formato de Log KOU Invalido");
       }
-
-      String codeServiceIp = validateSplit(token);
-      StringTokenizer token2 = new StringTokenizer(codeServiceIp, Constant.DELIMETER_IP);
-
-      validateSplit(token2).trim(); // codeService
-      String ip = validateSplit(token2).trim();
+      String codeServiceIp = validateNextTokenMain();
+      tokenCodeServiceIp = new StringTokenizer(codeServiceIp, Constant.DELIMETER_IP);
+      validateNextTokenCodeServiceIp().trim(); // codeService
+      String ip = validateNextTokenCodeServiceIp().trim();
       if (ip.length() > 30) {
          ip = ip.substring(0, 29);
       }
-
-      String name = validateSplit(token).trim();
-      String translatedLine = validateSplit(token); // translatedLine
-
-      if (count > 6) {
-         validateSplit(token); // marca
+      String name = validateNextTokenMain().trim();
+      String translatedLine = validateNextTokenMain(); // translatedLine
+      if (tokenMain.countTokens() > 6) {
+         validateNextTokenMain(); // marca
       }
-
-      validateSplit(token);
-      LogDTO logDTO = procesarTranslatedLine(translatedLine);
-
+      validateNextTokenMain();
+      procesarTranslatedLine(logDTO, translatedLine);
       logDTO.setTranslatedLine(translatedLine);
-
-      String OID = validateSplit(token).trim();
-      String nameEvent = validateSplit(token).trim();
-
+      String OID = validateNextTokenMain().trim();
+      String nameEvent = validateNextTokenMain().trim();
       logDTO.setIp(ip);
       logDTO.setName(name);
       logDTO.setOID(OID);
       logDTO.setNameEvent(nameEvent);
-
       logDTO.setKey(new KeyCatalogDTO(OID, null));
-
       logDTO.setNodo(getNodo(name));
-
       logDTO.setMapeado(true);
 
-      return logDTO;
+   }
+
+   private void adicionarInformacionLogDTO(LogEntity logEntity, LogDTO logDTO) {
+      logDTO.setSeq(logEntity.getSeq());
+      String priority = logEntity.getPriority();
+      if (PriorityEnum.CRITIC.getValue().equals(priority)) {
+         priority = PriorityEnum.CRITICAL.getValue();
+      }
+      logDTO.setPriority(priority);
+      if (logDTO.getKey() != null) {
+         logDTO.getKey().setCriticality(priority);
+      }
+
    }
 
    /**
@@ -104,7 +113,7 @@ public class LogUtil {
     * @param name
     * @return Nodo
     */
-   private static String getNodo(String name) {
+   private String getNodo(String name) {
       String expresion = "[.][A-Z_0-9]+[-]";
       String nodo = "";
 
@@ -119,8 +128,7 @@ public class LogUtil {
       return nodo;
    }
 
-   private static LogDTO procesarTranslatedLine(String translatedLine) {
-      LogDTO logDTO = new LogDTO();
+   private LogDTO procesarTranslatedLine(LogDTO logDTO, String translatedLine) {
       logDTO.setInterFace(getInterface(translatedLine));
       logDTO.setDescriptionAlarm(getDescripcionAlarma(translatedLine));
 
@@ -132,9 +140,9 @@ public class LogUtil {
     * @param token
     * @return Validacion
     */
-   private static String validateSplit(StringTokenizer token) {
+   private String validateNextTokenCodeServiceIp() {
       try {
-         String value = token.nextToken();
+         String value = tokenCodeServiceIp.nextToken();
          return value != null ? value : "";
       } catch (Exception e) {
          LOGGER.error("Validando Tokenizer: " + e);
@@ -143,34 +151,18 @@ public class LogUtil {
 
    }
 
-   /**
-    * Evalua las operaciones a escuchar del Listener MySQL
-    * @param sql
-    * @param operacionesAEscuchar
-    * @return Resultado de la Evaluacion
-    */
-   public static boolean evaluarOperacion(String sql, ArrayList<String> operacionesAEscuchar) {
-      for (String operacion : operacionesAEscuchar) {
-         int index = sql.indexOf(operacion);
-         if (index != -1) {
-            return true;
-         }
+   private String validateNextTokenMain() {
+      try {
+         String value = tokenMain.nextToken();
+         return value != null ? value : "";
+      } catch (Exception e) {
+         LOGGER.error("Validando Tokenizer: " + e);
+         return "";
       }
-      return false;
+
    }
 
-   /**
-    * Evalua la equivalencia de eventos configurados y
-    * el evento presentado
-    * @param eventType
-    * @param event
-    * @return Resultado de la evaluacion
-    */
-   public static boolean evaluarEvento(EventType eventType, Event event) {
-      return eventType.equals(event.getHeader().getEventType());
-   }
-
-   public static String getInterface(String translatedLine) {
+   public String getInterface(String translatedLine) {
       Pattern pattern = Pattern.compile(Constant.REGEX_INTERFACE);
       Matcher matcher = pattern.matcher(translatedLine);
 
@@ -186,7 +178,7 @@ public class LogUtil {
     * @param translatedLine
     * @return Descripcion de Alarma
     */
-   public static String getDescripcionAlarma(String translatedLine) {
+   public String getDescripcionAlarma(String translatedLine) {
       String descripcionAlarma = "";
       try {
          descripcionAlarma = translatedLine.replaceAll(Constant.REGEX_INTERFACE, "");

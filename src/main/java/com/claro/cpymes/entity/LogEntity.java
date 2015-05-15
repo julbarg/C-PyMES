@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(name = "logs")
 @NamedQueries({
    @NamedQuery(name = "LogEntity.findAll", query = "SELECT l FROM LogEntity l"),
-   @NamedQuery(name = "LogEntity.findByProcesado", query = "SELECT l FROM LogEntity l WHERE l.procesados =:procesados OR l.procesados IS NULL ORDER BY l.seq ASC") })
+   @NamedQuery(name = "LogEntity.findLogsNoProcesados", query = "SELECT l FROM LogEntity l WHERE l.procesados IS NULL ORDER BY l.seq ASC") })
 public class LogEntity implements Serializable {
    private static final long serialVersionUID = 1L;
 

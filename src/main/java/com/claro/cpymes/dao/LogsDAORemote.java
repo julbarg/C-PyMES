@@ -25,8 +25,8 @@ public interface LogsDAORemote {
 
    public void deleteById(long entityId);
 
-   public ArrayList<LogEntity> findByEstado(String estado);
-   
+   public ArrayList<LogEntity> findLogsNoProcesados();
+
    public void updateList(ArrayList<LogEntity> listEntity);
 
 }

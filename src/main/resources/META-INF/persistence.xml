@@ -13,10 +13,11 @@
 	</persistence-unit>
 	<persistence-unit name="LogsPU" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<non-jta-data-source>NoJTALogsDS</non-jta-data-source>
+		<non-jta-data-source>LogsDS</non-jta-data-source>
 		<class>com.claro.cpymes.entity.LogEntity</class>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<property name="hibernate.default_catalog" value="syslog_alcatel_pymes_cli" />
 		</properties>
 	</persistence-unit>
 </persistence>

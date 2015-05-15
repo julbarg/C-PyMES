@@ -3,6 +3,7 @@ package com.claro.cpymes.util;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
@@ -13,6 +14,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.claro.cpymes.listener.Connection;
+import com.github.shyiko.mysql.binlog.event.Event;
+import com.github.shyiko.mysql.binlog.event.EventType;
 
 
 /**
@@ -105,6 +108,33 @@ public class Util {
       Date newFecha = new Date(newFechaL);
 
       return newFecha;
+   }
+
+   /**
+    * Evalua la equivalencia de eventos configurados y
+    * el evento presentado
+    * @param eventType
+    * @param event
+    * @return Resultado de la evaluacion
+    */
+   public static boolean evaluarEvento(EventType eventType, Event event) {
+      return eventType.equals(event.getHeader().getEventType());
+   }
+
+   /**
+    * Evalua las operaciones a escuchar del Listener MySQL
+    * @param sql
+    * @param operacionesAEscuchar
+    * @return Resultado de la Evaluacion
+    */
+   public static boolean evaluarOperacion(String sql, ArrayList<String> operacionesAEscuchar) {
+      for (String operacion : operacionesAEscuchar) {
+         int index = sql.indexOf(operacion);
+         if (index != -1) {
+            return true;
+         }
+      }
+      return false;
    }
 
 }

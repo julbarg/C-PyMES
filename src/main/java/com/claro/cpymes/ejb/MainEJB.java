@@ -45,19 +45,29 @@ public class MainEJB {
 
       String method = Util.getProperties(Constant.METHOD);
       if (method.equals(Constant.METHOD_DAEMON)) {
-         LOGGER.info("CPyMES Iniciado con el metodo: " + Constant.METHOD_DAEMON);
-         daemonMySQLEJBRemote.inicializarDaemon(Constant.TIMER_DAEMON);
-
+         inicializarDaemon();
       } else if (method.equals(Constant.METHOD_LISTENER)) {
-         LOGGER.info("CPyMES Iniciado con el metodo: " + Constant.METHOD_LISTENER);
-         listenerMySQLEJBRemote.inicializarListener();
-
+         inicializarListener();
       } else {
-         LOGGER.error("Metodo de Ejecución no encontrado");
-         LOGGER.info("Revisar el archivo CPyMES.properties: " + Constant.PATH_CONFIG_PROPERTIES + ". Propiedad: "
-            + Constant.METHOD);
-         LOGGER.info("Valores permitidos: " + Constant.METHOD_DAEMON + ", " + Constant.METHOD_LISTENER);
+         noFoundMethod();
       }
 
+   }
+
+   private void inicializarDaemon() {
+      LOGGER.info("CPyMES Iniciado con el metodo: " + Constant.METHOD_DAEMON);
+      daemonMySQLEJBRemote.inicializarDaemon(Constant.TIMER_DAEMON);
+   }
+
+   private void inicializarListener() {
+      LOGGER.info("CPyMES Iniciado con el metodo: " + Constant.METHOD_LISTENER);
+      listenerMySQLEJBRemote.inicializarListener();
+   }
+
+   private void noFoundMethod() {
+      LOGGER.error("Metodo de Ejecución no encontrado");
+      LOGGER.info("Revisar el archivo CPyMES.properties: " + Constant.PATH_CONFIG_PROPERTIES + ". Propiedad: "
+         + Constant.METHOD);
+      LOGGER.info("Valores permitidos: " + Constant.METHOD_DAEMON + ", " + Constant.METHOD_LISTENER);
    }
 }

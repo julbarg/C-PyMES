@@ -7,10 +7,8 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 import com.claro.cpymes.entity.LogEntity;
 import com.claro.cpymes.util.Constant;
@@ -26,54 +24,35 @@ import com.claro.cpymes.util.Constant;
 @LocalBean
 public class LogsDAO extends TemplateLogsDAO<LogEntity> implements LogsDAORemote {
 
-   private static Logger LOGGER = LogManager.getLogger(LogsDAO.class.getName());
-
    /**
-    * Obtiene las entidades LogEntity por estado
-    * @param procesado Filtro con el que se realiza la consulta
-    * @return ArrayList<LogEntity> Lista de entidades encontradas
-    */
+   * Obtiene las entidades LogEntity por estado
+   * @param procesado Filtro con el que se realiza la consulta
+   * @return ArrayList<LogEntity> Lista de entidades encontradas
+   */
    @Override
-   public ArrayList<LogEntity> findByEstado(String procesado) {
+   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+   public ArrayList<LogEntity> findLogsNoProcesados() {
       EntityManager entityManager = entityManagerFactory.createEntityManager();
-      entityManager.getTransaction().begin();
-      TypedQuery<LogEntity> query = entityManager.createNamedQuery("LogEntity.findByProcesado", LogEntity.class);
-      query.setParameter("procesados", procesado);
-      ;
-      ArrayList<LogEntity> results = (ArrayList<LogEntity>) query.setMaxResults(Constant.MAXIME_RESULT_LOGS).getResultList();
-      entityManager.getTransaction().commit();
+      TypedQuery<LogEntity> query = entityManager.createNamedQuery("LogEntity.findLogsNoProcesados", LogEntity.class);
+      ArrayList<LogEntity> results = (ArrayList<LogEntity>) query.setMaxResults(Constant.MAXIME_RESULT_LOGS)
+         .getResultList();
       entityManager.close();
 
       return results;
 
    }
 
-   /**
-    * Persiste la entidad
-    * @param entity Entidad a persistir
-    */
-   @Override
-   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-   public LogEntity update(LogEntity entity) {
-      LogEntity logEntity = new LogEntity();
-      try {
-         logEntity = super.update(entity);
-      } catch (Exception e) {
-         LOGGER.error("Error actualizando registro: " + e);
-      }
-
-      return logEntity;
-   }
-
    @Override
    public void updateList(ArrayList<LogEntity> listEntity) {
       EntityManager entityManager = entityManagerFactory.createEntityManager();
       entityManager.getTransaction().begin();
+      int i = 0;
       for (LogEntity log : listEntity) {
-         entityManager.merge(log);
+         Query query = entityManager.createQuery("UPDATE LogEntity e SET e.procesados = 'S' WHERE e.seq = :seq");
+         query.setParameter("seq", log.getSeq());
+         query.executeUpdate();
       }
       entityManager.getTransaction().commit();
       entityManager.close();
    }
-
 }

@@ -45,9 +45,11 @@ public class DaemonMySQLEJB implements DaemonMySQLEJBRemote {
     */
    public void inicializarDaemon(int timer) {
       try {
-         LOGGER.info("Inicio Daemon");
+         LOGGER.info("START DAEMON");
          while (procesar) {
+            LOGGER.info("START PROCESS");
             procesarDB();
+            LOGGER.info("END PROCESS..................................................................");
             Thread.sleep(timer);
          }
 

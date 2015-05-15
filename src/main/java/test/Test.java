@@ -15,13 +15,16 @@ import com.claro.cpymes.dto.KeyCatalogDTO;
 import com.claro.cpymes.dto.LogDTO;
 import com.claro.cpymes.entity.AlarmCatalogEntity;
 import com.claro.cpymes.entity.LogEntity;
-import com.claro.cpymes.util.LogUtil;
 import com.claro.cpymes.util.Util;
 
 
 public class Test {
 
    public static void main(String[] args) throws IOException {
+
+      KeyCatalogDTO key = new KeyCatalogDTO();
+      System.out.println("Key...." + key.isEmpty());
+
       char space = 32;
       String delimiter = "|";
 
@@ -169,27 +172,29 @@ public class Test {
          "hwGponONTGEMPortCfgChangeTrap", "zxAnUserOutCVid", "zxAnUserOutSVid", "linkDown", "tmnxEqPortFailure",
          "tmnxEqPortSFPRemoved", "hwAlarmEthernetMacLost", "hwAlarmLOSOccurs", "GonuLinkLOS", "GponOntSFAlarm",
          "GponOntLOSAlarm", "GponOntSUFAlarm", "GponOntConfigRecoveryFailAlarm", "GponOntResetByWatchdogAlarm",
-         "hwGponONTGEMPortCfgChangeTrap", "zxAnUserOutCVid", "zxAnUserOutSVid", "tmnxEqPortError", "tmnxEqPortEtherAlarm",
-         "tmnxEndPointTxActiveChanged", "svcPersistencyProblem", "hostConnectivityLost", "hwPortStateChangeInfoTrap",
-         "hwAlarmUpstreamPortConnectfail", "hwGponOntHardwareFaultyAlarmTrap", "hwGponOntE1T1PortStatusAbnormalAlarmTrap",
-         "hwGponTcontProfileOperateTrap", "hwXponPortStateChangeTrap", "hwGponProfOltOpticalTransceiverAbsentAlarmTrap",
-         "hwGponProfOntSFAlarmTrap", "hwGponProfOntLOFAlarmTrap", "hwGponProfRogueOntDisapearAlarmTrap",
-         "hwXponProfLocalOpticalModuleRecoverAlarmThresAlarmTrap", "hwXponProfLocalOpticalModuleRecoverWarnThresAlarmTrap",
-         "hwGponProfOntE1T1PortStatusAbnormalAlarmTrap", "zxGponBWProfileIndex", "zxOnuTrafficMgmtUnitTcontUpBWIdxPtr",
-         "zxGponGemPortType", "zxGponGemPortTcontIdx", "zxGponVlanPortIndex", "zxGponVlanPortMode", "zxGponVlanPortPvid",
-         "tmnxEqPowerSupplyFailure", "tmnxEqPowerSupplyRemoved", "hwDevPowerInputFaultTrap", "hwDevPowerInputRecoverTrap",
-         "powerConnFaultAlarm", "acCommFailAlarm", "acInputPowerOffAlarm", "acInputLoopSwtichAlarm", "hwSwitchoverTrap",
-         "hwVlanifDownTrap", "hwGponProfNumerousOntsPowerOffAlarmTrap", "mplsLdpFailedInitSessionThresholdExceeded",
-         "mplsLdpPathVectorLimitMismatch", "tmnxEqCardFailure", "tmnxEqCardRemoved", "tmnxEqFlashDataLoss", "sbiBootConfig",
-         "sbiBootSnmpd", "tmnxSvcPEDiscPolServOperStatChg", "vRtrMplsStateChange", "vRtrMplsIfStateChange", "vRtrMplsLspDown",
-         "vRtrMplsLspPathDown", "DevBoardDisappeared", "DevBoardStaChgOffLine", "DevBoardMisMatch", "DevBoardHardFault",
-         "DevBoardFault", "DevBoardRestore", "DevBoardReplaced", "DevBoardHardRestore", "DevSubBoardMisMatch",
-         "DevSubBoardReplaced", "hwAlarmEthernetPortLinkStatusChange", "hwAlarmLinkBetweenStackPortsRecover",
-         "hwGponOltTFlarmTrap", "hwGponOltOpticalTransceiverAbsentAlarmTrap", "hwPortTypeAdaptFaultAlarmTrap",
-         "hwGponProfOltLOSAlarmTrap", "linkDown", "tmnxEqPortFailure", "tmnxEqPortSFPRemoved", "hwAlarmEthernetMacLost",
-         "hwAlarmLOSOccurs", "GonuLinkLOS", "GponOntSFAlarm", "GponOntLOSAlarm", "GponOntSUFAlarm",
-         "GponOntConfigRecoveryFailAlarm", "GponOntResetByWatchdogAlarm", "hwGponONTGEMPortCfgChangeTrap", "zxAnUserOutCVid",
-         "zxAnUserOutSVid", "tmnxEnvTempTooHigh", "envCommAlarm", "hwOpticsPortTemperatureHighAlarmTrap", "risingAlarm",
+         "hwGponONTGEMPortCfgChangeTrap", "zxAnUserOutCVid", "zxAnUserOutSVid", "tmnxEqPortError",
+         "tmnxEqPortEtherAlarm", "tmnxEndPointTxActiveChanged", "svcPersistencyProblem", "hostConnectivityLost",
+         "hwPortStateChangeInfoTrap", "hwAlarmUpstreamPortConnectfail", "hwGponOntHardwareFaultyAlarmTrap",
+         "hwGponOntE1T1PortStatusAbnormalAlarmTrap", "hwGponTcontProfileOperateTrap", "hwXponPortStateChangeTrap",
+         "hwGponProfOltOpticalTransceiverAbsentAlarmTrap", "hwGponProfOntSFAlarmTrap", "hwGponProfOntLOFAlarmTrap",
+         "hwGponProfRogueOntDisapearAlarmTrap", "hwXponProfLocalOpticalModuleRecoverAlarmThresAlarmTrap",
+         "hwXponProfLocalOpticalModuleRecoverWarnThresAlarmTrap", "hwGponProfOntE1T1PortStatusAbnormalAlarmTrap",
+         "zxGponBWProfileIndex", "zxOnuTrafficMgmtUnitTcontUpBWIdxPtr", "zxGponGemPortType", "zxGponGemPortTcontIdx",
+         "zxGponVlanPortIndex", "zxGponVlanPortMode", "zxGponVlanPortPvid", "tmnxEqPowerSupplyFailure",
+         "tmnxEqPowerSupplyRemoved", "hwDevPowerInputFaultTrap", "hwDevPowerInputRecoverTrap", "powerConnFaultAlarm",
+         "acCommFailAlarm", "acInputPowerOffAlarm", "acInputLoopSwtichAlarm", "hwSwitchoverTrap", "hwVlanifDownTrap",
+         "hwGponProfNumerousOntsPowerOffAlarmTrap", "mplsLdpFailedInitSessionThresholdExceeded",
+         "mplsLdpPathVectorLimitMismatch", "tmnxEqCardFailure", "tmnxEqCardRemoved", "tmnxEqFlashDataLoss",
+         "sbiBootConfig", "sbiBootSnmpd", "tmnxSvcPEDiscPolServOperStatChg", "vRtrMplsStateChange",
+         "vRtrMplsIfStateChange", "vRtrMplsLspDown", "vRtrMplsLspPathDown", "DevBoardDisappeared",
+         "DevBoardStaChgOffLine", "DevBoardMisMatch", "DevBoardHardFault", "DevBoardFault", "DevBoardRestore",
+         "DevBoardReplaced", "DevBoardHardRestore", "DevSubBoardMisMatch", "DevSubBoardReplaced",
+         "hwAlarmEthernetPortLinkStatusChange", "hwAlarmLinkBetweenStackPortsRecover", "hwGponOltTFlarmTrap",
+         "hwGponOltOpticalTransceiverAbsentAlarmTrap", "hwPortTypeAdaptFaultAlarmTrap", "hwGponProfOltLOSAlarmTrap",
+         "linkDown", "tmnxEqPortFailure", "tmnxEqPortSFPRemoved", "hwAlarmEthernetMacLost", "hwAlarmLOSOccurs",
+         "GonuLinkLOS", "GponOntSFAlarm", "GponOntLOSAlarm", "GponOntSUFAlarm", "GponOntConfigRecoveryFailAlarm",
+         "GponOntResetByWatchdogAlarm", "hwGponONTGEMPortCfgChangeTrap", "zxAnUserOutCVid", "zxAnUserOutSVid",
+         "tmnxEnvTempTooHigh", "envCommAlarm", "hwOpticsPortTemperatureHighAlarmTrap", "risingAlarm",
          "hwAlarmLOLOccurInBITSInputPort", "hwOpticsTxPowerOutOfRangeAlarmTrap", "hwOpticsRxPowerOutOfRangeAlarmTrap",
          "hwOpticsRxPowerRestoreAlarmTrap", "hwOpticsPowerOutOfRangeAlarmTrap", "GonuLinkLOF",
          "hwGonuTxPowerExceedThreAlarmTrap", "GonuRxPo", "GponnniOntLinkLosAlarm", "GponnniOntLinkLofAlarm",
@@ -197,23 +202,28 @@ public class Test {
          "hwGponRemoteOpticalModuleExceedAlarmThresAlarmTrap", "hwGponLocalOpticalModuleExceedWarnThresAlarmTrap",
          "hwGponOntE1T1PortStatusRecoverAlarmTrap", "hwGponEthernetPortLossOfSignelOccurAlarmTrap",
          "hwGponE1T1PortLOSOccurAlarmTrap", "hwGponProfOntShellOpenedAlarmTrap", "hwGponProfOntIsRogueOntAlarmTrap",
-         "hwXponProfLocalOpticalModuleExceedAlramThresAlarmTrap", "hwXponProfRemoteOpticalModuleExceedAlarmThresAlarmTrap",
-         "hwXponProfLocalOpticalModuleExceedWarnThresAlarmTrap", "hwXponProfRemoteOpticalModuleExceedWarnThresAlarmTrap",
-         "hwGponProfEthernetPortLossOfSignelOccurAlarmTrap", "hwGponProfE1T1PortLOSOccurAlarmTrap", "hwGponProfOltLOSAlarmTrap" };
+         "hwXponProfLocalOpticalModuleExceedAlramThresAlarmTrap",
+         "hwXponProfRemoteOpticalModuleExceedAlarmThresAlarmTrap",
+         "hwXponProfLocalOpticalModuleExceedWarnThresAlarmTrap",
+         "hwXponProfRemoteOpticalModuleExceedWarnThresAlarmTrap", "hwGponProfEthernetPortLossOfSignelOccurAlarmTrap",
+         "hwGponProfE1T1PortLOSOccurAlarmTrap", "hwGponProfOltLOSAlarmTrap" };
 
-      String[] nameDevices = { "HAC-BAQ.BQCENTRO-CP1", "HAC-BOG.ALAMOS-CP1", "HAC-BOG.ARANDA-CP1", "HAC-BOG.ARANDA-CP2",
-         "HAC-BOG.CABRERA-CP1", "HAC-BOG.CENTRO-CP1", "HAC-BOG.CFINANCIERO-CP1", "HAC-BOG.CHAPINERO-CP1", "HAC-BOG.CHICOANT-CP2",
-         "HAC-BOG.CHICOANT-CP3", "HAC-BOG.ESMERALDA-CP1", "HAC-BOG.FERIAS-CP1", "HAC-BOG.FONTIBON-CP2", "HAC-BOG.FONTIBONH-CP1",
-         "HAC-BOG.GALERIAS-CP1", "HAC-BOG.GRANJAS-CP1", "HAC-BOG.PCB-CP1", "HAC-BOG.QUIRIGUA-CP1", "HAC-BOG.QUIRIGUA-CP2",
-         "HAC-BOG.RESTREPO-CP1", "HAC-BOG.SANMATEO-CP1", "HAC-BOG.SUBA-CP1", "HAC-BOG.TELEPORT-CP1", "HAC-BOG.TEUSAQUILLO-CP1",
-         "HAC-BOG.TOBERIN-CP1", "HAC-BOG.TRIARA-CP1", "HAC-BOG.VENECIA-CP1", "HAC-BUC.BUCARAMANGA-CP1", "HAC-CAL.DELICIAS-CP1",
-         "HAC-CAL.ERMITA-CP1", "HAC-CAL.ERMITA-CP2", "HAC-CAL.ESTACION-CP1", "HAC-CAL.FLORA-CP1", "HAC-CAL.FLORA-CP2",
-         "HAC-CAL.HOLGUINES-CP1", "HAC-CAL.PASARELA-CP1", "HAC-MED.BERRIO-CP1", "HAC-MED.ENVIGADO-CP1", "HAC-MED.ESPACIOSUR-CP1",
+      String[] nameDevices = { "HAC-BAQ.BQCENTRO-CP1", "HAC-BOG.ALAMOS-CP1", "HAC-BOG.ARANDA-CP1",
+         "HAC-BOG.ARANDA-CP2", "HAC-BOG.CABRERA-CP1", "HAC-BOG.CENTRO-CP1", "HAC-BOG.CFINANCIERO-CP1",
+         "HAC-BOG.CHAPINERO-CP1", "HAC-BOG.CHICOANT-CP2", "HAC-BOG.CHICOANT-CP3", "HAC-BOG.ESMERALDA-CP1",
+         "HAC-BOG.FERIAS-CP1", "HAC-BOG.FONTIBON-CP2", "HAC-BOG.FONTIBONH-CP1", "HAC-BOG.GALERIAS-CP1",
+         "HAC-BOG.GRANJAS-CP1", "HAC-BOG.PCB-CP1", "HAC-BOG.QUIRIGUA-CP1", "HAC-BOG.QUIRIGUA-CP2",
+         "HAC-BOG.RESTREPO-CP1", "HAC-BOG.SANMATEO-CP1", "HAC-BOG.SUBA-CP1", "HAC-BOG.TELEPORT-CP1",
+         "HAC-BOG.TEUSAQUILLO-CP1", "HAC-BOG.TOBERIN-CP1", "HAC-BOG.TRIARA-CP1", "HAC-BOG.VENECIA-CP1",
+         "HAC-BUC.BUCARAMANGA-CP1", "HAC-CAL.DELICIAS-CP1", "HAC-CAL.ERMITA-CP1", "HAC-CAL.ERMITA-CP2",
+         "HAC-CAL.ESTACION-CP1", "HAC-CAL.FLORA-CP1", "HAC-CAL.FLORA-CP2", "HAC-CAL.HOLGUINES-CP1",
+         "HAC-CAL.PASARELA-CP1", "HAC-MED.BERRIO-CP1", "HAC-MED.ENVIGADO-CP1", "HAC-MED.ESPACIOSUR-CP1",
          "HAC-MED.ESTADIO-CP1", "HAC-MED.SANDIEGO-CP1", "HAC-NEI.NEIVACENTRO-CP1", "HAC-PER.DOSQBRADAS-CP1",
-         "HAC-SIN.SINCELEJO-CP1", "ZAC-ARM.ARMENIA-CP1", "ZAC-BAR.CUMBRE-CP1", "ZAC-BAR.ROBLES-CP1", "ZAC-BAR.SENA-CP1",
-         "ZAC-BOG.MASTER100-CP1", "ZAC-BOG.NTOBERIN-CP1", "ZAC-BOG.TRIARA-CP2", "ZAC-BUC.PARAUCO-CP1", "ZAC-BUC.RICAURTE-CP1",
-         "ZAC-CAR.INEM-CP1", "ZAC-CHI.CHIA-CP1", "ZAC-CTG.EL_BOSQUE-CP1", "ZAC-CUC.CUCUTA-CP1", "ZAC-MAN.MANIZALES-CP1",
-         "ZAC-MED.RIONEGRO-CP1", "ZAC-MON.MONTERIA-CP1", "ZAC-STA.SANTAMARTA-CP1", "ZAC-VILL.VILLAVICENCIO-CP1" };
+         "HAC-SIN.SINCELEJO-CP1", "ZAC-ARM.ARMENIA-CP1", "ZAC-BAR.CUMBRE-CP1", "ZAC-BAR.ROBLES-CP1",
+         "ZAC-BAR.SENA-CP1", "ZAC-BOG.MASTER100-CP1", "ZAC-BOG.NTOBERIN-CP1", "ZAC-BOG.TRIARA-CP2",
+         "ZAC-BUC.PARAUCO-CP1", "ZAC-BUC.RICAURTE-CP1", "ZAC-CAR.INEM-CP1", "ZAC-CHI.CHIA-CP1",
+         "ZAC-CTG.EL_BOSQUE-CP1", "ZAC-CUC.CUCUTA-CP1", "ZAC-MAN.MANIZALES-CP1", "ZAC-MED.RIONEGRO-CP1",
+         "ZAC-MON.MONTERIA-CP1", "ZAC-STA.SANTAMARTA-CP1", "ZAC-VILL.VILLAVICENCIO-CP1" };
 
       Random random = new Random();
       String[] prioritys = { "alert", "crit", "warning" };
@@ -294,8 +304,6 @@ public class Test {
       LogEntity logEntity = new LogEntity();
       logEntity
          .setMsg("TFM0775 - httpd: HUAWEI 172.30.14.183 | HAC-BOG.TRIARA-CP1 | Se generaron cambios en la ONT 0 -100653824 |  | .1.3.6.1.4.1.2011.6.128.1.1.12.3.0.51 | hwXponProfOntPortStatusTrap");
-      LogDTO lodDTOs = LogUtil.mapearLogEntity(logEntity);
-      System.out.println(lodDTOs.getDescriptionAlarm());
 
       HashMap<String, LogDTO> hashMap = new HashMap<String, LogDTO>();
       LogDTO lol = new LogDTO();

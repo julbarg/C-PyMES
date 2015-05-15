@@ -25,11 +25,8 @@ public class TemplateDAO<T> {
    }
 
    public T findOne(long id) {
-      T t;
       EntityManager entityManager = entityManagerFactory.createEntityManager();
-      entityManager.getTransaction().begin();
-      t = entityManager.find(this.clase, id);
-      entityManager.getTransaction().commit();
+      T t = entityManager.find(this.clase, id);
       entityManager.close();
 
       return t;
@@ -46,10 +43,9 @@ public class TemplateDAO<T> {
 
    public T update(T entity) {
 
-      T t;
       EntityManager entityManager = entityManagerFactory.createEntityManager();
       entityManager.getTransaction().begin();
-      t = entityManager.merge(entity);
+      T t = entityManager.merge(entity);
       entityManager.getTransaction().commit();
       entityManager.close();
 
